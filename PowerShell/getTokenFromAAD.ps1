@@ -32,6 +32,7 @@ else {
 
 # Need to remove
 $plnpasswd = $spPassword
+
 function getTokenFromAAD 
 {
     Param(
