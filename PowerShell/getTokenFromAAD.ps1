@@ -1,16 +1,21 @@
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory = $true, Position=1)][string] $tenantId,
-    [Parameter(Mandatory = $true, Position=2)][string] $appId,
-    [Parameter(Mandatory = $true, Position=3)][SecureString] $spPassword,
+    # This is temp part of code should be removed
+    $tenantId="93f33571-550f-43cf-b09f-cd331338d086",
+    $appId="19688ae0-fa83-48fb-998b-89249cd614ce",
+    $spPassword="hOq7Q~hrWA7GvcgOrzm8uy3FYkRmcDQKonFX~",
+    # This part should be uncommented
+    # [Parameter(Mandatory = $true, Position=1)][string] $tenantId,
+    # [Parameter(Mandatory = $true, Position=2)][string] $appId,
+    # [Parameter(Mandatory = $true, Position=3)][SecureString] $spPassword,
     [switch] $Addreport = $false
 
 )
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-if((Get-InstalledModule `
+if($null -eq (Get-InstalledModule `
     -Name "MicrosoftPowerBiMgmt.Admin" `
-    -ErrorAction SilentlyContinue) -eq $null)
+    -ErrorAction SilentlyContinue))
     {
         Write-Host "`nMicrosoftPowerBiMgmt.Admin does not installed"
         Install-Module -Name MicrosoftPowerBiMgmt.Admin -Scope CurrentUser -Force -Verbose
@@ -19,10 +24,13 @@ else {
     Write-Host "`nMicrosoftPowerBiMgmt.Admin installed"
 }
 
-$bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($spPassword)
-$plnpasswd = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
-# Write-Host $plnpasswd
+# Decoding password, need to uncommented 
+# $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($spPassword)
+# $plnpasswd = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
 
+# Write-Host $plnpasswd
+# Need to remove
+$plnpasswd = $spPassword
 function getTokenFromAAD 
 {
     Param(
