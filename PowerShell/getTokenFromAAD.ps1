@@ -29,6 +29,7 @@ else {
 # $plnpasswd = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
 
 # Write-Host $plnpasswd
+
 # Need to remove
 $plnpasswd = $spPassword
 function getTokenFromAAD 
