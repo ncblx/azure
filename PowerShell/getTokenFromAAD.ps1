@@ -4,7 +4,9 @@ Param(
     $tenantId="93f33571-550f-43cf-b09f-cd331338d086",
     $appId="19688ae0-fa83-48fb-998b-89249cd614ce",
     $spPassword="hOq7Q~hrWA7GvcgOrzm8uy3FYkRmcDQKonFX~",
+    #
     # This part should be uncommented
+    #
     # [Parameter(Mandatory = $true, Position=1)][string] $tenantId,
     # [Parameter(Mandatory = $true, Position=2)][string] $appId,
     # [Parameter(Mandatory = $true, Position=3)][SecureString] $spPassword,
@@ -52,6 +54,21 @@ function getTokenFromAAD
     Write-Host "`n" $bearertoken
     return $bearertoken.access_token 
 }
+
+function addReport () {
+    [CmdletBinding()]
+    Param ($token)
+    try {
+        
+    }
+    catch {
+        
+    }
+
+    
+}
+
+
 
 
 $token = getTokenFromAAD $tenantId $appId $plnpasswd
