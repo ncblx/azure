@@ -88,7 +88,7 @@ stages:
             return $bearertoken.access_token 
             }
             $spPassword = getsecretkey ${{parameters.vaultname}} ${{parameters.secretKey}}
-            getTokenFromAAD ${{parameters.tenantId}} ${{parameters.appId}} $spPassword
+            $token = getTokenFromAAD ${{parameters.tenantId}} ${{parameters.appId}} $spPassword
           errorActionPerference: continue
           azurePowerShellVersion: latestVersion
         enabled: true
