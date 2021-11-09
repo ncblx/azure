@@ -1,0 +1,94 @@
+parameters:
+
+- name: env
+  displayName: Select Environment
+  type: string
+  default: dev
+  values:
+  - dev
+
+- name: vaultname
+  displayName: Select Ket Vault
+  type: string
+  default: akvname1
+  values:
+  - akvname1
+
+- name: secretKey
+  displayName: Enter Secret Key
+  type: string
+  default: 'testsecret1'
+
+- name: tenantId
+  displayName: Enter tenantId
+  type: string
+  default: '93f33571-550f-43cf-b09f-cd331338d086'
+
+- name: appId
+  displayName: Enter appId
+  type: string
+  default: '19688ae0-fa83-48fb-998b-89249cd614ce'
+
+trigger:
+- none
+
+variables:
+ - template: /variables/${{ parameters.env }}.yml
+
+stages:
+- stage: Get_Secrets_from_KeyVault
+  displayName: Get Secret
+  jobs:
+  # - deployment: TEST
+  #   displayName: no
+  #   pool: 'pipeline'
+  #   environment: '${{ parameters.env }}'
+  #   strategy:
+  #    runOnce:
+  #     deploy:
+  #      steps:
+  #      - script: echo Hello
+  - job: Get_Secret_from_KeyVault
+    pool: ${{ variables.poolname }}
+    steps:
+      - task: AzurePowerShell@5
+        displayName: Get_Secrets_from_KeyVault
+        inputs:
+          azureSubscription: ${{variables.azureServiceConnection}}
+          ScriptType: InlineScript
+          Inline: |
+           Import-Module Az.KeyVault
+           Function global:getsecretkey()
+            {
+              Param(
+                [parameter(Mandatory = $true)][String]$vaultName,
+                [parameter(Mandatory = $true)][String]$secretKey
+              )
+              Write-Host ("Geting Secret Key:{0} from KeyVault:{1}" -f $secretKey, $vaultName)
+              $spPassword = Get-AzKeyVaultSecret -vaultName $vaultName -name $secretKey -AsPlainText
+              return $spPassword
+            }
+           Function getTokenFromAAD 
+            {
+            Param(
+              [Parameter(Mandatory = $true)][string] $tenantId,
+              [Parameter(Mandatory = $true)][string] $appId,
+              [Parameter(Mandatory = $true)][String] $spPassword
+
+            )
+            $aadurl = "https://login.microsoftonline.com";
+            $powerbiurl = "https://analysis.windows.net/powerbi/api"
+            Write-Host "`nAAD URL:" $aadurl
+            Write-Host "Tenant ID:" $tenantId
+            Write-Host "APP ID:" $appId
+            # Write-Host "Password:" $plpasswd
+            $bearertoken = Invoke-RestMethod -Uri $aadurl/$tenantId/oauth2/token?api-version=1.0 -Method Post -Body `
+              @{"grant_type" = "client_credentials"; "resource" = $powerbiurl; "client_id" = $($appId); "client_secret" = $($spPassword)}
+            Write-Host "`n" $bearertoken
+            return $bearertoken.access_token 
+            }
+            $spPassword = getsecretkey ${{parameters.vaultname}} ${{parameters.secretKey}}
+            getTokenFromAAD ${{parameters.tenantId}} ${{parameters.appId}} $spPassword
+          errorActionPerference: continue
+          azurePowerShellVersion: latestVersion
+        enabled: true
