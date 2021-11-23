@@ -6,22 +6,22 @@ parameters:
   default: dev
   values:
   - dev
-- name: Change Requies ID
+- name: changeRequestId
   displayName: Enter Change Request
   type: string
   default: 'Test'
-- name: Baseversion
+- name: baseversion
   displayName: Enter Baseversion for Nexus
   type: string
   default: '1.0.0-SNAPSHOT'
-- name: Repository ID
+- name: repositoryId
   displayName: Enter Repository ID for Nexus
   type: string
   default: 'deploy-shared-01-snapshot'
   values:
   - deploy-shared-01-snapshot
   - deploy-shared-01-release
-- name: Artifact ID
+- name: artifactId
   displayName: Enter Artifact ID from Nexus
   type: string
   default: 'azure'
@@ -35,9 +35,29 @@ trigger:
  - none
 
 stages:
-- stage: Get_Secrets_from_KeyVault
-  displayName: Get Secret
+- stage: Display_change_request
+  displayName: Display change request
   jobs:
+    - jobs: Display_change_request
+      pool: ${{variables.poolname}}
+      steps:
+        - checkout: none
+        - download: none
+        - task: PowerShell@2
+          name: VariableSettings
+          displayName: Set variable
+          inputs: 
+            targetType: 'inline'
+            script: |
+              $changerequestid = "${{parameters.changeRequestId}}".Trim()
+              Write-Host "#vso[task.setvariable variable=chgReqId;isOutput=true]$changeRequestId"
+              Write-Host "Chnage request ID is: " $changeRequestId
+            errorActionPerference: continue
+- stage: Display_change_request
+  displayName: Display change request
+  jobs:
+    - jobs: Display_change_request
+    
   # - deployment: TEST
   #   displayName: no
   #   pool: 'pipeline'
