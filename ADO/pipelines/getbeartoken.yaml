@@ -1,0 +1,61 @@
+parameters:
+
+- name: env
+  displayName: Select Environment
+  type: string
+  default: dev
+  values:
+  - dev
+- name: Change Requies ID
+  displayName: Enter Change Request
+  type: string
+  default: 'Test'
+- name: Baseversion
+  displayName: Enter Baseversion for Nexus
+  type: string
+  default: '1.0.0-SNAPSHOT'
+- name: Repository ID
+  displayName: Enter Repository ID for Nexus
+  type: string
+  default: 'deploy-shared-01-snapshot'
+  values:
+  - deploy-shared-01-snapshot
+  - deploy-shared-01-release
+- name: Artifact ID
+  displayName: Enter Artifact ID from Nexus
+  type: string
+  default: 'azure'
+  values:
+  - azure
+
+variables:
+ - template: /env-configs/${{parameters.env}}.yml
+
+trigger:
+ - none
+
+stages:
+- stage: Get_Bearer_token
+  displayName: Get Bearer token
+  jobs:
+  # - deployment: TEST
+  #   displayName: no
+  #   pool: 'pipeline'
+  #   environment: '${{ parameters.env }}'
+  #   strategy:
+  #    runOnce:
+  #     deploy:
+  #      steps:
+  #      - script: echo Hello
+  - job: Get_Bearer_token
+    pool: ${{ variables.poolname }}
+    steps:
+      - task: AzurePowerShell@5
+        displayName: Get_Bearer_token
+        inputs:
+          azureSubscription: ${{variables.azureServiceConnection}}
+          ScriptType: InlineScript
+          Inline: |
+
+          azurePowerShellVersion: latestVersion
+        enabled: true
