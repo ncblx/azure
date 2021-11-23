@@ -1,0 +1,82 @@
+parameters:
+
+- name: env
+  displayName: Select Environment
+  type: string
+  default: dev
+  values:
+  - dev
+- name: changeRequestId
+  displayName: Enter Change Request
+  type: string
+  default: 'Test'
+- name: baseversion
+  displayName: Enter Baseversion for Nexus
+  type: string
+  default: '1.0.0-SNAPSHOT'
+- name: repositoryId
+  displayName: Enter Repository ID for Nexus
+  type: string
+  default: 'deploy-shared-01-snapshot'
+  values:
+  - deploy-shared-01-snapshot
+  - deploy-shared-01-release
+- name: artifactId
+  displayName: Enter Artifact ID from Nexus
+  type: string
+  default: 'azure'
+  values:
+  - azure
+
+variables:
+ - template: /env-configs/${{parameters.env}}.yml
+
+trigger:
+ - none
+
+stages:
+- stage: Display_change_request
+  displayName: Display change request
+  jobs:
+    - jobs: Display_change_request
+      pool: ${{variables.poolname}}
+      steps:
+        - checkout: none
+        - download: none
+        - task: PowerShell@2
+          name: VariableSettings
+          displayName: Set variable
+          inputs: 
+            targetType: 'inline'
+            script: |
+              $changerequestid = "${{parameters.changeRequestId}}".Trim()
+              Write-Host "#vso[task.setvariable variable=chgReqId;isOutput=true]$changeRequestId"
+              Write-Host "Chnage request ID is: " $changeRequestId
+            errorActionPerference: continue
+- stage: Display_change_request
+  displayName: Display change request
+  jobs:
+    - jobs: Display_change_request
+    
+  # - deployment: TEST
+  #   displayName: no
+  #   pool: 'pipeline'
+  #   environment: '${{ parameters.env }}'
+  #   strategy:
+  #    runOnce:
+  #     deploy:
+  #      steps:
+  #      - script: echo Hello
+  - job: Get_Secret_from_KeyVault
+    pool: ${{ variables.poolname }}
+    steps:
+      - task: AzurePowerShell@5
+        displayName: Get_Secrets_from_KeyVault
+        inputs:
+          azureSubscription: ${{variables.azureServiceConnection}}
+          ScriptType: InlineScript
+          Inline: |
+
+          errorActionPerference: continue
+          azurePowerShellVersion: latestVersion
+        enabled: true

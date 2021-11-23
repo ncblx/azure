@@ -1,0 +1,4 @@
+variables:
+  poolnamewindows:
+  poolnamelinux:
+  scritp: '$(System.ArtifactsDirectory)\main.ps1'
