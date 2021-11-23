@@ -35,30 +35,28 @@ trigger:
  - none
 
 stages:
-- stage: Get_from_Git
-  displayName: Get From Git
+- stage: Get_Secrets_from_KeyVault
+  displayName: Get Secret
   jobs:
-  - job: Get_from_Git
-    pool: ${{ variables.poolname }}
-    steps:
-      - task: DownloadGitHubRelease@0
-        inputs:
-          connection: 'GitHub'
-          userRepository: 'ncblx/azure'
-          defaultVersionType: 'latest'
-          downloadPath: '$(System.ArtifactsDirectory)'
-- stage: Get_Bearer_token
-  displayName: Get Bearer token
-  jobs:
-  - job: Get_Bearer_token
+  # - deployment: TEST
+  #   displayName: no
+  #   pool: 'pipeline'
+  #   environment: '${{ parameters.env }}'
+  #   strategy:
+  #    runOnce:
+  #     deploy:
+  #      steps:
+  #      - script: echo Hello
+  - job: Get_Secret_from_KeyVault
     pool: ${{ variables.poolname }}
     steps:
       - task: AzurePowerShell@5
-        displayName: Get_Bearer_token
+        displayName: Get_Secrets_from_KeyVault
         inputs:
           azureSubscription: ${{variables.azureServiceConnection}}
           ScriptType: InlineScript
           Inline: |
 
+          errorActionPerference: continue
           azurePowerShellVersion: latestVersion
         enabled: true
