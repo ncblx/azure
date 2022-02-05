@@ -1,0 +1,19 @@
+{
+    "value": {
+      "days": [
+        "Sunday",
+        "Tuesday",
+        "Friday",
+        "Saturday"
+      ],
+      "times": [
+        "07:00",
+        "11:30",
+        "16:00",
+        "23:30"
+      ],
+      "localTimeZoneId": "UTC",
+      "enabled": true,
+      "notifyOption": "NoNotification"
+    }
+  }
