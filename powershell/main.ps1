@@ -28,7 +28,7 @@ else {
     Write-Host "nMicrosoft PowerBIMgmt.Admin installed"
 }
 
-Import-Module -Name $PSScript Root\setupPowerBI.psm1 -Force `
+Import-Module -Name $PSScriptRoot\setupPowerBI.psm1 -Force `
     -Argumentlist $configfile
 
 # Set the values from the config file passed as the argument
