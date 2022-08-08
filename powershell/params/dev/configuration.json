@@ -1,0 +1,29 @@
+{
+    "azure": {
+        "tenantId": "",
+        "subscriptionId": "",
+        "subscriptionName": "",
+        "objectId": "",
+        "clientId": "",
+        "powerBiApiUr1": "https://api.powerbi.com/v1.0/myorg",
+        "clientSecret": "",
+        "vmKeyVaultName": "",
+        "keyVaultScUser": "",
+        "keyVaultScSecret": "",
+        "usersWithReadAccessToTheVault": [
+         {
+            "name": "",
+            "objectId": ""
+         }
+        ]
+    },
+    "environment": {
+        "resourceGroupPrefix": "",
+        "ubscloudEnv": "dev",
+        "subEnv": "",
+        "location": "North Europe",
+        "forRegion": "",
+        "resourceGroupName": "",
+        "deploymentSubEnv": ""
+    }
+}

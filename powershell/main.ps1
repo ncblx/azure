@@ -49,7 +49,7 @@ Import-Module -Name $PSScriptRoot\managePowerBI.psm1 -Force `
     $group, $gatewayName, $cloudEnv, $reportConfigfile, $reportDirectory, $vmkeyVaultName, `
     $keyVaultScuser, $keyVaultScSecret, $AddSchedule, $scheduleJson
 
-(!(
+if (!(
     $addUserToworskpace -or
     $addSPToWorskpace -or
     $addGroupToWorskpace -or
